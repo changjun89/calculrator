@@ -11,6 +11,45 @@ public class Calculator {
         return 0;
     }
 
+    public int calcatePostfix(String expr) {
+        String[] split = expr.split(" ");
+        Stack<Integer> number = new Stack<>();
+        int firstNum;
+        int secondNum;
+
+        for ( String arg : split) {
+            switch (arg) {
+                case "+":
+                    firstNum = number.pop();
+                    secondNum = number.pop();
+                    number.push( secondNum +firstNum);
+                    break;
+                case "-":
+                    firstNum = number.pop();
+                    secondNum = number.pop();
+                    number.push( secondNum -firstNum);
+                    break;
+                case "*":
+                    firstNum = number.pop();
+                    secondNum = number.pop();
+                    number.push( secondNum *firstNum);
+                    break;
+                case "/":
+                    firstNum = number.pop();
+                    secondNum = number.pop();
+                    number.push( secondNum /firstNum);
+                    break;
+                default:
+                    number.push(Integer.parseInt(arg));
+                    break;
+            }
+        }
+
+        return number.pop();
+
+    }
+
+
     public String convertToPostfix(String input) {
         List<Character> result = new ArrayList<>();
         Stack<Character> operator = new Stack<>();
@@ -47,7 +86,7 @@ public class Calculator {
         }
         StringBuffer postfix = new StringBuffer();
         for (Character character : result) {
-            postfix.append(character.toString());
+            postfix.append(character.toString()+" ");
         }
         return postfix.toString();
     }

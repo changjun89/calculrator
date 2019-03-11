@@ -33,10 +33,18 @@ public class CalculatorApplicationTests {
 
     @Test
     public void 중위표현을_후위표현으로_변환() {
-        String input = "A*(B+C)";
+        //String input = "A*(B+C)";
         String input2 = "(150+60/2)*2+(78-20+60)+1";
-        assertEquals("ABC+*",calculator.convertToPostfix(input));
-        assertEquals("150602/+2*7820-60++1+",calculator.convertToPostfix(input2));
+        //assertEquals("A B C + *",calculator.convertToPostfix(input));
+        assertEquals("150 60 2 / + 2 * 78 20 - 60 + + 1 +",calculator.convertToPostfix(input2));
+    }
+
+    @Test
+    public void 중위표현계산() {
+        String arg = "5 10 5 - *";
+        assertEquals(25,calculator.calcatePostfix(arg));
+
+
     }
 
 }
