@@ -8,7 +8,7 @@ public class Calculator {
 
 
     public int calculate(String input) {
-        return 0;
+        return calcatePostfix(convertToPostfix(input));
     }
 
     public int calcatePostfix(String expr) {
@@ -17,27 +17,27 @@ public class Calculator {
         int firstNum;
         int secondNum;
 
-        for ( String arg : split) {
+        for (String arg : split) {
             switch (arg) {
                 case "+":
                     firstNum = number.pop();
                     secondNum = number.pop();
-                    number.push( secondNum +firstNum);
+                    number.push(secondNum + firstNum);
                     break;
                 case "-":
                     firstNum = number.pop();
                     secondNum = number.pop();
-                    number.push( secondNum -firstNum);
+                    number.push(secondNum - firstNum);
                     break;
                 case "*":
                     firstNum = number.pop();
                     secondNum = number.pop();
-                    number.push( secondNum *firstNum);
+                    number.push(secondNum * firstNum);
                     break;
                 case "/":
                     firstNum = number.pop();
                     secondNum = number.pop();
-                    number.push( secondNum /firstNum);
+                    number.push(secondNum / firstNum);
                     break;
                 default:
                     number.push(Integer.parseInt(arg));
@@ -51,27 +51,29 @@ public class Calculator {
 
 
     public String convertToPostfix(String input) {
-        List<Character> result = new ArrayList<>();
-        Stack<Character> operator = new Stack<>();
-        char[] chars = input.toCharArray();
-        for(char arg : chars ) {
+        List<String> result = new ArrayList<>();
+        Stack<String> operator = new Stack<>();
 
-            if('+' == arg || '-' == arg || '*' == arg || '/' == arg ) {
-                if(operator.empty()) {
+        String[] splitedExpr = converStrToArrayBySplit(input);
+        char[] chars = input.toCharArray();
+        for (String arg : splitedExpr) {
+
+            if ("+".equals(arg) || "-".equals(arg) || "*".equals(arg) || "/".equals(arg)) {
+                if (operator.empty()) {
                     operator.push(arg);
                     continue;
                 }
-                if(getOperatorPrioty(operator.peek()) >= getOperatorPrioty(arg) && getOperatorPrioty(operator.peek())>0 ) {
-                    Character popOperator = operator.pop();
+                if (getOperatorPrioty(operator.peek()) >= getOperatorPrioty(arg) && getOperatorPrioty(operator.peek()) > 0) {
+                    String popOperator = operator.pop();
                     result.add(popOperator);
                     operator.push(arg);
-                }else {
+                } else {
                     operator.push(arg);
                 }
-            } else if('(' == arg) {
+            } else if ("(".equals(arg)) {
                 operator.push(arg);
-            } else if(')' == arg) {
-                while('('!= operator.peek()){
+            } else if (")".equals(arg)) {
+                while (!"(".equals(operator.peek())) {
                     result.add(operator.pop());
                 }
                 operator.pop();
@@ -79,28 +81,56 @@ public class Calculator {
                 result.add(arg);
             }
         }
-        if(!operator.empty()) {
-            while (!operator.empty()){
+        if (!operator.empty()) {
+            while (!operator.empty()) {
                 result.add(operator.pop());
             }
         }
         StringBuffer postfix = new StringBuffer();
-        for (Character character : result) {
-            postfix.append(character.toString()+" ");
+        for (String character : result) {
+            postfix.append(character + " ");
         }
-        return postfix.toString();
+
+        return postfix.toString().substring(0, postfix.length() - 1);
     }
 
-    public int getOperatorPrioty(Character operator) {
-        if('(' == operator || ')'==operator ) {
+    public int getOperatorPrioty(String operator) {
+        if ("(".equals(operator) || ")".equals(operator)) {
             return 0;
         }
-        if('+' == operator || '-'==operator ) {
+        if ("+".equals(operator) || "-".equals(operator)) {
             return 1;
         }
-        if('*' == operator || '/'==operator ) {
+        if ("*".equals(operator) || "/".equals(operator)) {
             return 2;
         }
         return 99;
+    }
+
+    public String[] converStrToArrayBySplit(String expr) {
+
+        char[] chars = expr.toCharArray();
+        List<String> splitedExpr = new ArrayList<>();
+        String numberExpr = "";
+
+        for (Character arg : chars) {
+            if ('+' == arg || '-' == arg || '*' == arg || '/' == arg || '(' == arg || ')' == arg) {
+                if (!"".equals(numberExpr)) {
+                    splitedExpr.add(numberExpr);
+                }
+                splitedExpr.add(arg.toString());
+                numberExpr = "";
+            } else {
+                numberExpr += arg.toString();
+            }
+        }
+        if (!"".equals(numberExpr)) {
+            splitedExpr.add(numberExpr);
+        }
+        String[] result = new String[splitedExpr.size()];
+
+        return splitedExpr.toArray(result);
+
+
     }
 }
