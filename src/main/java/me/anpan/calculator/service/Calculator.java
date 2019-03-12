@@ -58,51 +58,10 @@ public class Calculator {
         Stack<String> operator = new Stack<>();
 
         String[] splitedExpr = converStrToArrayBySplit(input);
-        for (String arg : splitedExpr) {
 
-            if (chkOperlator(arg)) {
-                if (operator.empty()) {
-                    operator.push(arg);
-                    continue;
-                }
-                if (getOperatorPrioty(operator.peek()) >= getOperatorPrioty(arg) && getOperatorPrioty(operator.peek()) > 0) {
-                    String popOperator = operator.pop();
-                    result.add(popOperator);
-                    operator.push(arg);
-                    continue;
-                }
-
-                operator.push(arg);
-                continue;
-            }
-
-            if ("(".equals(arg)) {
-                operator.push(arg);
-                continue;
-            }
-
-            if (")".equals(arg)) {
-                while (!"(".equals(operator.peek())) {
-                    result.add(operator.pop());
-                }
-                operator.pop();
-                continue;
-            }
-
-            result.add(arg);
-        }
-        if (!operator.empty()) {
-            while (!operator.empty()) {
-                result.add(operator.pop());
-            }
-        }
-
-        StringBuffer postfix = new StringBuffer();
-        for (String character : result) {
-            postfix.append(character + " ");
-        }
-        return postfix.toString().substring(0, postfix.length() - 1);
+        return listToStrWithBlank(result);
     }
+    
 
     public int getOperatorPrioty(String operator) {
         if ("(".equals(operator) || ")".equals(operator)) {
@@ -141,6 +100,14 @@ public class Calculator {
         String[] result = new String[splitedExpr.size()];
 
         return splitedExpr.toArray(result);
+    }
+
+    private String listToStrWithBlank(List<String> result) {
+        StringBuffer postfix = new StringBuffer();
+        for (String character : result) {
+            postfix.append(character + " ");
+        }
+        return postfix.toString().substring(0, postfix.length() - 1);
     }
 
     private boolean chkOperlatorIncudeBracket(Character arg) {
