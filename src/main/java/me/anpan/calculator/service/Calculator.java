@@ -1,21 +1,24 @@
-package me.anpan.calculator;
+package me.anpan.calculator.service;
+
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+@Service
 public class Calculator {
 
 
-    public int calculate(String input) {
+    public double calculate(String input) {
         return calcatePostfix(convertToPostfix(input));
     }
 
-    public int calcatePostfix(String expr) {
+    public double calcatePostfix(String expr) {
         String[] split = expr.split(" ");
-        Stack<Integer> number = new Stack<>();
-        int firstNum;
-        int secondNum;
+        Stack<Double> number = new Stack<>();
+        double firstNum;
+        double secondNum;
 
         for (String arg : split) {
             switch (arg) {
@@ -37,10 +40,10 @@ public class Calculator {
                 case "/":
                     firstNum = number.pop();
                     secondNum = number.pop();
-                    number.push(secondNum / firstNum);
+                    number.push(Math.round(secondNum / firstNum * 100000) / 100000.0);
                     break;
                 default:
-                    number.push(Integer.parseInt(arg));
+                    number.push(Double.parseDouble(arg));
                     break;
             }
         }
@@ -55,10 +58,9 @@ public class Calculator {
         Stack<String> operator = new Stack<>();
 
         String[] splitedExpr = converStrToArrayBySplit(input);
-        char[] chars = input.toCharArray();
         for (String arg : splitedExpr) {
 
-            if ("+".equals(arg) || "-".equals(arg) || "*".equals(arg) || "/".equals(arg)) {
+            if (chkOperlator(arg)) {
                 if (operator.empty()) {
                     operator.push(arg);
                     continue;
@@ -67,30 +69,38 @@ public class Calculator {
                     String popOperator = operator.pop();
                     result.add(popOperator);
                     operator.push(arg);
-                } else {
-                    operator.push(arg);
+                    continue;
                 }
-            } else if ("(".equals(arg)) {
+
                 operator.push(arg);
-            } else if (")".equals(arg)) {
+                continue;
+            }
+
+            if ("(".equals(arg)) {
+                operator.push(arg);
+                continue;
+            }
+
+            if (")".equals(arg)) {
                 while (!"(".equals(operator.peek())) {
                     result.add(operator.pop());
                 }
                 operator.pop();
-            } else {
-                result.add(arg);
+                continue;
             }
+
+            result.add(arg);
         }
         if (!operator.empty()) {
             while (!operator.empty()) {
                 result.add(operator.pop());
             }
         }
+
         StringBuffer postfix = new StringBuffer();
         for (String character : result) {
             postfix.append(character + " ");
         }
-
         return postfix.toString().substring(0, postfix.length() - 1);
     }
 
@@ -114,15 +124,16 @@ public class Calculator {
         String numberExpr = "";
 
         for (Character arg : chars) {
-            if ('+' == arg || '-' == arg || '*' == arg || '/' == arg || '(' == arg || ')' == arg) {
+            if (chkOperlatorIncudeBracket(arg)) {
                 if (!"".equals(numberExpr)) {
                     splitedExpr.add(numberExpr);
                 }
                 splitedExpr.add(arg.toString());
                 numberExpr = "";
-            } else {
-                numberExpr += arg.toString();
+                continue;
             }
+
+            numberExpr += arg.toString();
         }
         if (!"".equals(numberExpr)) {
             splitedExpr.add(numberExpr);
@@ -130,7 +141,19 @@ public class Calculator {
         String[] result = new String[splitedExpr.size()];
 
         return splitedExpr.toArray(result);
+    }
 
+    private boolean chkOperlatorIncudeBracket(Character arg) {
+        if ('+' == arg || '-' == arg || '*' == arg || '/' == arg || '(' == arg || ')' == arg) {
+            return true;
+        }
+        return false;
+    }
 
+    private boolean chkOperlator(String arg) {
+        if ("+".equals(arg) || "-".equals(arg) || "*".equals(arg) || "/".equals(arg)) {
+            return true;
+        }
+        return false;
     }
 }
