@@ -1,19 +1,12 @@
-package me.anpan.calculator;
+package me.anpan.calculator.service;
 
-import me.anpan.calculator.service.Calculator;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
-
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class CalculatorApplicationTests {
+public class CalculatorTest {
 
     Calculator calculator;
 

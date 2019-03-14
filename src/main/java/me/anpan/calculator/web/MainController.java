@@ -15,6 +15,6 @@ public class MainController {
     @PostMapping("/calculator")
     public String calculator(@RequestParam String expr) throws Exception{
         double result = calculator.calculate(expr);
-        return "계산식 " + expr + " 결과는 : " + result;
+        return "계산식: "+ expr + " 결과는 : " + result;
     }
 }
