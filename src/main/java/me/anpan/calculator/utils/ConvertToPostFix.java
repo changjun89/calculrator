@@ -6,7 +6,7 @@ import java.util.Stack;
 
 public class ConvertToPostFix {
 
-    public String convertInfixToPostfix(String input) {
+    public String convertToPostfix(String input) {
         List<String> result = new ArrayList<>();
         Stack<String> operator = new Stack<>();
 

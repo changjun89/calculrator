@@ -19,7 +19,7 @@ public class ConvertToPostFixTest {
         //String input = "A*(B+C)";
         String input2 = "(150+60/2)*2+(78-20+60)+1";
         //assertEquals("A B C + *",calculator.convertToPostfix(input));
-        assertEquals("150 60 2 / + 2 * 78 20 - 60 + + 1 +", convertToPostfix.convertInfixToPostfix(input2));
+        assertEquals("150 60 2 / + 2 * 78 20 - 60 + + 1 +", convertToPostfix.convertToPostfix(input2));
     }
 
     @Test

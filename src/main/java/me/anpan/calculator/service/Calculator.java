@@ -11,7 +11,7 @@ public class Calculator {
 
     public double calculate(String input) throws Exception {
         ConvertToPostFix convertToPostFix = new ConvertToPostFix();
-        return calcatePostfix(convertToPostFix.convertInfixToPostfix(input));
+        return calcatePostfix(convertToPostFix.convertToPostfix(input));
     }
 
     public double calcatePostfix(String expr) throws Exception {
