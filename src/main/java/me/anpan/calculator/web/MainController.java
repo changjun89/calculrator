@@ -13,7 +13,7 @@ public class MainController {
     Calculator calculator;
 
     @PostMapping("/calculator")
-    public String calculator(@RequestParam String expr) {
+    public String calculator(@RequestParam String expr) throws Exception{
         double result = calculator.calculate(expr);
         return "계산식 " + expr + " 결과는 : " + result;
     }

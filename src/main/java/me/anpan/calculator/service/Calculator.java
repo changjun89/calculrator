@@ -1,163 +1,57 @@
 package me.anpan.calculator.service;
 
+import me.anpan.calculator.utils.CalculatorUtils;
+import me.anpan.calculator.utils.ConvertToPostFix;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 @Service
 public class Calculator {
 
-
-    public double calculate(String input) {
-        return calcatePostfix(convertToPostfix(input));
+    public double calculate(String input) throws Exception {
+        ConvertToPostFix convertToPostFix = new ConvertToPostFix();
+        return calcatePostfix(convertToPostFix.convertInfixToPostfix(input));
     }
 
-    public double calcatePostfix(String expr) {
-        String[] split = expr.split(" ");
+    public double calcatePostfix(String expr) throws Exception {
+        String[] split = splitByBlank(expr);
         Stack<Double> number = new Stack<>();
-        double firstNum;
-        double secondNum;
 
         for (String arg : split) {
-            switch (arg) {
-                case "+":
-                    firstNum = number.pop();
-                    secondNum = number.pop();
-                    number.push(secondNum + firstNum);
-                    break;
-                case "-":
-                    firstNum = number.pop();
-                    secondNum = number.pop();
-                    number.push(secondNum - firstNum);
-                    break;
-                case "*":
-                    firstNum = number.pop();
-                    secondNum = number.pop();
-                    number.push(secondNum * firstNum);
-                    break;
-                case "/":
-                    firstNum = number.pop();
-                    secondNum = number.pop();
-                    number.push(Math.round(secondNum / firstNum * 100000) / 100000.0);
-                    break;
-                default:
-                    number.push(Double.parseDouble(arg));
-                    break;
+            if (!CalculatorUtils.isOperator(arg)) {
+                number.push(Double.parseDouble(arg));
+                continue;
             }
-        }
 
+            number.push(calculateByParamOfOperator(arg, number.pop(), number.pop()));
+        }
         return number.pop();
-
     }
 
-
-    public String convertToPostfix(String input) {
-        List<String> result = new ArrayList<>();
-        Stack<String> operator = new Stack<>();
-
-        String[] splitedExpr = converStrToArrayBySplit(input);
-        for (String arg : splitedExpr) {
-
-            if (chkOperlator(arg)) {
-                if (operator.empty()) {
-                    operator.push(arg);
-                    continue;
-                }
-                if (getOperatorPrioty(operator.peek()) >= getOperatorPrioty(arg) && getOperatorPrioty(operator.peek()) > 0) {
-                    String popOperator = operator.pop();
-                    result.add(popOperator);
-                    operator.push(arg);
-                    continue;
-                }
-
-                operator.push(arg);
-                continue;
-            }
-
-            if ("(".equals(arg)) {
-                operator.push(arg);
-                continue;
-            }
-
-            if (")".equals(arg)) {
-                while (!"(".equals(operator.peek())) {
-                    result.add(operator.pop());
-                }
-                operator.pop();
-                continue;
-            }
-
-            result.add(arg);
-        }
-        if (!operator.empty()) {
-            while (!operator.empty()) {
-                result.add(operator.pop());
-            }
-        }
-        return listToStrWithBlank(result);
+    private String[] splitByBlank(String expr) {
+        return expr.split(" ");
     }
 
+    private double calculateByParamOfOperator(String param, double firstNum, double secondNum) throws Exception {
 
-    public int getOperatorPrioty(String operator) {
-        if ("(".equals(operator) || ")".equals(operator)) {
-            return 0;
+        if ("+".equals(param)) {
+            return secondNum + firstNum;
         }
-        if ("+".equals(operator) || "-".equals(operator)) {
-            return 1;
+
+        if ("-".equals(param)) {
+            return secondNum - firstNum;
         }
-        if ("*".equals(operator) || "/".equals(operator)) {
-            return 2;
+
+        if ("*".equals(param)) {
+            return secondNum * firstNum;
         }
-        return 99;
+
+        if ("/".equals(param)) {
+            return Math.round(secondNum / firstNum * 100000) / 100000.0;
+        }
+
+        throw new Exception("허용되지 않은 연산자 입니다.");
     }
 
-    public String[] converStrToArrayBySplit(String expr) {
-
-        char[] chars = expr.toCharArray();
-        List<String> splitedExpr = new ArrayList<>();
-        String numberExpr = "";
-
-        for (Character arg : chars) {
-            if (chkOperlatorIncudeBracket(arg)) {
-                if (!"".equals(numberExpr)) {
-                    splitedExpr.add(numberExpr);
-                }
-                splitedExpr.add(arg.toString());
-                numberExpr = "";
-                continue;
-            }
-
-            numberExpr += arg.toString();
-        }
-        if (!"".equals(numberExpr)) {
-            splitedExpr.add(numberExpr);
-        }
-        String[] result = new String[splitedExpr.size()];
-
-        return splitedExpr.toArray(result);
-    }
-
-    private String listToStrWithBlank(List<String> result) {
-        StringBuffer postfix = new StringBuffer();
-        for (String character : result) {
-            postfix.append(character + " ");
-        }
-        return postfix.toString().substring(0, postfix.length() - 1);
-    }
-
-    private boolean chkOperlatorIncudeBracket(Character arg) {
-        if ('+' == arg || '-' == arg || '*' == arg || '/' == arg || '(' == arg || ')' == arg) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean chkOperlator(String arg) {
-        if ("+".equals(arg) || "-".equals(arg) || "*".equals(arg) || "/".equals(arg)) {
-            return true;
-        }
-        return false;
-    }
 }
