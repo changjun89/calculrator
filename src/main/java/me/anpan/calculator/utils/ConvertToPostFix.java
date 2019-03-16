@@ -4,51 +4,68 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class ConvertToPostFix {
+public class ConvertToPostFix extends Stack<String> {
+    List<String> result = new ArrayList<>();
+
+    private void operatorExecute(String arg) {
+        if (this.empty()) {
+            this.push(arg);
+            return;
+        }
+        if (comparePriotyAndIsOperator(arg)) {
+            result.add(this.pop());
+            this.push(arg);
+            return;
+        }
+
+        this.push(arg);
+    }
+
+    private boolean comparePriotyAndIsOperator(String arg) {
+        return (CalculatorUtils.getOperatorPrioty(this.peek()) >= CalculatorUtils.getOperatorPrioty(arg) && CalculatorUtils.isOperator(this.peek()));
+    }
+
+    private void operatorOrBraketExecute(String arg) {
+        if (CalculatorUtils.isOperator(arg)) {
+            operatorExecute(arg);
+        }
+        if (CalculatorUtils.isBacket(arg)) {
+            bracketExecute(arg);
+        }
+    }
+
+    private void bracketExecute(String arg) {
+        if ("(".equals(arg)) {
+            this.push(arg);
+        }
+
+        if (")".equals(arg)) {
+            while (!"(".equals(this.peek())) {
+                result.add(this.pop());
+            }
+            this.pop();
+        }
+    }
+
+    private void remainInputToList() {
+        if (!this.empty()) {
+            while (!this.empty()) {
+                result.add(this.pop());
+            }
+        }
+    }
 
     public String convertToPostfix(String input) {
-        List<String> result = new ArrayList<>();
-        Stack<String> operator = new Stack<>();
 
         for (String arg : converStrToArrayBySplit(input)) {
-
-            if (CalculatorUtils.isOperator(arg)) {
-                if (operator.empty()) {
-                    operator.push(arg);
-                    continue;
-                }
-                if (CalculatorUtils.getOperatorPrioty(operator.peek()) >= CalculatorUtils.getOperatorPrioty(arg)
-                        && CalculatorUtils.getOperatorPrioty(operator.peek()) > 0) {
-                    String popOperator = operator.pop();
-                    result.add(popOperator);
-                    operator.push(arg);
-                    continue;
-                }
-
-                operator.push(arg);
+            if (CalculatorUtils.isOperatorOrBaraket(arg)) {
+                operatorOrBraketExecute(arg);
                 continue;
             }
-
-            if ("(".equals(arg)) {
-                operator.push(arg);
-                continue;
-            }
-
-            if (")".equals(arg)) {
-                while (!"(".equals(operator.peek())) {
-                    result.add(operator.pop());
-                }
-                operator.pop();
-                continue;
-            }
-
             result.add(arg);
         }
-        if (!operator.empty()) {
-            while (!operator.empty()) {
-                result.add(operator.pop());
-            }
-        }
+        remainInputToList();
+
         return listToStrWithBlank(result);
     }
 
@@ -62,11 +79,10 @@ public class ConvertToPostFix {
 
     public String[] converStrToArrayBySplit(String expr) {
 
-        char[] chars = expr.toCharArray();
         List<String> splitedExpr = new ArrayList<>();
         String numberExpr = "";
 
-        for (Character arg : chars) {
+        for (Character arg : expr.toCharArray()) {
             if (CalculatorUtils.isOperlatorIncudeBracket(arg)) {
                 if (!"".equals(numberExpr)) {
                     splitedExpr.add(numberExpr);
@@ -85,6 +101,4 @@ public class ConvertToPostFix {
 
         return splitedExpr.toArray(result);
     }
-
-
 }
