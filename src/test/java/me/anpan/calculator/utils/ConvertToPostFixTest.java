@@ -26,7 +26,7 @@ public class ConvertToPostFixTest {
     public void 식을_배열로_변한환다() {
         String arg = "(10+20)*3";
         String[] result = {"(", "10", "+", "20", ")", "*", "3"};
-        assertArrayEquals(result, convertToPostfix.converStrToArrayBySplit(arg));
+        assertArrayEquals(result, convertToPostfix.getExpressionArray(arg));
     }
 
 }

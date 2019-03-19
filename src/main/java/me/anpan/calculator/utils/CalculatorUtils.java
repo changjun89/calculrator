@@ -8,8 +8,14 @@ public class CalculatorUtils {
     public static boolean isOperator(String arg) {
         return OPERATOR.contains(arg);
     }
-    public static boolean isBacket(String arg) {return BRACKET.contains(arg);}
-    public static boolean isOperatorOrBaraket(String arg) {return (OPERATOR+BRACKET).contains(arg);}
+
+    public static boolean isBacket(String arg) {
+        return BRACKET.contains(arg);
+    }
+
+    public static boolean isOperatorOrBaraket(String arg) {
+        return (OPERATOR + BRACKET).contains(arg);
+    }
 
     public static int getOperatorPrioty(String operator) {
         if ("(".equals(operator) || ")".equals(operator)) {
