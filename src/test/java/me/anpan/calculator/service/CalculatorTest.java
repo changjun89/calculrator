@@ -54,11 +54,4 @@ public class CalculatorTest {
         assertThat(6.0, is(calculator.calculate(input)));
     }
 
-    @Test
-    public void 중위표현계산() throws Exception {
-        String arg = "5 10 5 - *";
-        assertThat(25.0, is(calculator.calcatePostfix(arg)));
-    }
-
-
 }
