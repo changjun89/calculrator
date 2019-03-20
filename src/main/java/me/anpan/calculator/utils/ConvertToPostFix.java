@@ -1,7 +1,10 @@
 package me.anpan.calculator.utils;
 
+import me.anpan.calculator.service.OperatorType;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 
 public class ConvertToPostFix {
@@ -12,7 +15,7 @@ public class ConvertToPostFix {
         if (CalculatorUtils.isOperator(arg)) {
             operators.operatorExecute(arg, result);
         }
-        if (CalculatorUtils.isBacket(arg)) {
+        if (CalculatorUtils.isBracket(arg)) {
             operators.bracketExecute(arg, result);
         }
     }
@@ -69,4 +72,5 @@ public class ConvertToPostFix {
         }
         return splitedExpr;
     }
+
 }

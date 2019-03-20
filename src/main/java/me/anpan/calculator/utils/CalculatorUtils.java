@@ -9,7 +9,7 @@ public class CalculatorUtils {
         return OPERATOR.contains(arg);
     }
 
-    public static boolean isBacket(String arg) {
+    public static boolean isBracket(String arg) {
         return BRACKET.contains(arg);
     }
 

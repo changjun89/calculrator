@@ -6,24 +6,24 @@ import java.util.Stack;
 public class Operators {
     private Stack<String> operators = new Stack<>();
 
+    private void push(String operator) {
+        operators.push(operator);
+    }
+
+    private String pop() {
+        return operators.pop();
+    }
+
+    private String peek() {
+        return operators.peek();
+    }
+
     public boolean empty() {
         return operators.isEmpty();
     }
 
-    public void push(String arg) {
-        operators.push(arg);
-    }
-
-    public String pop() {
-        return operators.pop();
-    }
-
-    public String peek() {
-        return operators.peek();
-    }
-
-    public boolean isLessThanTop(String arg) {
-        return (CalculatorUtils.getOperatorPrioty(peek()) >= CalculatorUtils.getOperatorPrioty(arg));
+    public boolean isLessThanTop(String operatoer) {
+        return (CalculatorUtils.getOperatorPrioty(peek()) >= CalculatorUtils.getOperatorPrioty(operatoer));
     }
 
     public void operatorExecute(String arg, List<String> listOperatoer) {
@@ -38,9 +38,9 @@ public class Operators {
         push(arg);
     }
 
-    private void kickTop(String arg, List<String> listOperatoer) {
+    private void kickTop(String operator, List<String> listOperatoer) {
         listOperatoer.add(pop());
-        push(arg);
+        push(operator);
     }
 
     public void bracketExecute(String arg, List<String> listOperator) {
